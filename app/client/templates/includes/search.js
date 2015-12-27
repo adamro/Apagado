@@ -17,13 +17,13 @@ Template.search.events({
 	'submit form': function(event) {
 		event.preventDefault();
 
-		var userName = $(event.target).find('[name=git_user_name]').val();
+		var git_username = $(event.target).find('[name=git_username]').val();
 
-		if(!userName) { 
+		if(!git_username) { 
 			Template.instance().searchError.set(NO_USERNAME_ERROR);
 			return
 		}
 
-		Router.go('repositoriesList', { git_user_name: userName });
+		Router.go('repositoriesList', { git_username: git_username });
 	}
 });

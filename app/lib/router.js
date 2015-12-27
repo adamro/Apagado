@@ -6,6 +6,6 @@ Router.route('/', {
 	name: 'home'
 });
 
-Router.route('/:git_user_name', {
+Router.route('/:git_username', {
 	name: 'repositoriesList'
 });

@@ -1,5 +1,5 @@
 Template.repositoriesList.helpers({
-	userName: function() { 
-		return Router.current().params.git_user_name;
+	git_username: function() { 
+		return Router.current().params.git_username;
 	}
 });

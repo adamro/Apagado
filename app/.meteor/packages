@@ -8,3 +8,6 @@ meteor-platform
 iron:router
 twbs:bootstrap-noglyph
 reactive-var
+accounts-github
+accounts-ui
+service-configuration
