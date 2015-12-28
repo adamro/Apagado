@@ -11,3 +11,5 @@ reactive-var
 accounts-github
 accounts-ui
 service-configuration
+http
+check

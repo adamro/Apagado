@@ -21,7 +21,7 @@ Template.search.events({
 
 		if(!git_username) { 
 			Template.instance().searchError.set(NO_USERNAME_ERROR);
-			return
+			return;
 		}
 
 		Router.go('repositoriesList', { git_username: git_username });

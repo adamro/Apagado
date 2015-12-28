@@ -7,5 +7,9 @@ Router.route('/', {
 });
 
 Router.route('/:git_username', {
-	name: 'repositoriesList'
+	name: 'repositoriesList',
+	action: function() { 
+		this.state.set('git_username', this.params.git_username);
+		this.render();
+	}
 });
