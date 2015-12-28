@@ -5,8 +5,8 @@ Template.repositoriesList.onCreated(function() {
 		var controller = Iron.controller();
 		var git_username = controller.state.get('git_username');
 
-		if(!Apagado.Caching.isUserRepositoriesCached(git_username)) { 
-			Apagado.GitHubApi.getRepositories(git_username, Apagado.Caching.cacheRepositories);
+		if(!Apagado.Cacher.isUserRepositoriesCached(git_username)) { 
+			Apagado.GitHubApi.getRepositories(git_username, Apagado.Cacher.cacheRepositories);
 		}
 	});
 });
@@ -17,7 +17,7 @@ Template.repositoriesList.helpers({
 	},
 	repositories: function() {
 		var git_username = Iron.controller().state.get('git_username');
-		return Apagado.Caching.Repositories.find({ 'owner.login': git_username }, { sort: { repo_score: -1 }});
+		return Apagado.Cacher.Repositories.find({ 'owner.login': git_username }, { sort: { repo_score: -1 }});
 	},
 	repositoriesCached: function() {
 		var usersArray = Session.get('usersWithRepositoriesCached');

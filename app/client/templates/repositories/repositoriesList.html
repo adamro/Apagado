@@ -3,7 +3,7 @@
 	<h1>{{git_username}}'s repository list</h1>
 	{{#if repositoriesCached }}
 		{{# each repositories}}
-			<h3>{{name}}</h3>
+			{{> repositoryItem}}
 		{{/each}}
 	{{else}}
 		<h3>not ready</h3>
