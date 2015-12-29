@@ -1,7 +1,7 @@
 Apagado.Cacher = (function() {
 	var api = {};
 
-	const REPOSITORY_ATTRIBUTES = ['full_name', 'owner', 'name', 'description', 'created_at', 'updated_at', 'language', 'watchers', 'forks', 'stargazers_count'];
+	const REPOSITORY_ATTRIBUTES = ['full_name', 'url', 'owner', 'name', 'description', 'created_at', 'updated_at', 'language', 'watchers', 'forks', 'stargazers_count', 'fork'];
 	const WATCHER_ATTRIBUTES = ['login', 'id', 'html_url'];
 	const STARGAZER_ATTRIBUTES = ['login', 'id', 'html_url'];
 	const CONTRIBUTOR_ATTRIBUTES = ['login', 'id', 'contributions', 'html_url'];
@@ -91,6 +91,7 @@ Apagado.Cacher = (function() {
 		if(Array.isArray(watchers)) { 
 			watchers.forEach(function(watcher) { 
 				var relevantWatcher = _.pick(watcher, WATCHER_ATTRIBUTES);
+				_.extend(relevantWatcher, { watching: repositoryFullName });
 
 				api.Watchers.insert(relevantWatcher);
 			});
@@ -104,6 +105,7 @@ Apagado.Cacher = (function() {
 		if(Array.isArray(forks)) { 
 			forks.forEach(function(fork) { 
 				var relevantFork = _.pick(fork, REPOSITORY_ATTRIBUTES);
+				_.extend(relevantFork, { fork_of: repositoryFullName });
 
 				api.Forks.insert(relevantFork);
 			});
@@ -117,6 +119,7 @@ Apagado.Cacher = (function() {
 		if(Array.isArray(stargazers)) { 
 			stargazers.forEach(function(stargazer) { 
 				var relevantStargazer = _.pick(stargazer, STARGAZER_ATTRIBUTES);
+				_.extend(relevantStargazer, { stargazering: repositoryFullName });
 
 				api.Stargazers.insert(relevantStargazer);
 			});
@@ -130,6 +133,7 @@ Apagado.Cacher = (function() {
 		if(Array.isArray(contributors)) { 
 			contributors.forEach(function(contributor) { 
 				var relevantContributor = _.pick(contributor, CONTRIBUTOR_ATTRIBUTES);
+				_.extend(relevantContributor, { contributed_to: repositoryFullName });
 
 				api.Contributors.insert(relevantContributor);
 			});

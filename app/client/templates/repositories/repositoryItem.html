@@ -5,8 +5,33 @@
 		<p>Langauge: {{language}}</p>
 		<p>Created at: {{created_at}}</p>
 		<p>Updated at: {{updated_at}}</p>
-		<a>Watchers: {{watchers}}</a>
-		<a>Forks: {{forks}}</a>
-		<a>Stargazers: {{stargazers_count}}</a>
+		<div class="repository-data-tabs">
+			<a class="repository-data-tab  {{ selectedIfCurrentRepositoryDataTabIs 'Contributors'}}" data-tab-name="Contributors">Contributors</a>
+			<a class="{{#if hasWatchers}} repository-data-tab {{ selectedIfCurrentRepositoryDataTabIs 'Watchers'}} {{/if}}" data-tab-name="Watchers">Watchers: {{watchers}}</a>
+			<a class="{{#if hasForks}} repository-data-tab {{ selectedIfCurrentRepositoryDataTabIs 'Forks'}}{{/if}}" data-tab-name="Forks">Forks: {{forks}}</a>
+			<a class="{{#if hasStargazers}} repository-data-tab {{ selectedIfCurrentRepositoryDataTabIs 'Stargazers'}} {{/if}}" data-tab-name="Stargazers">Stargazers: {{stargazers_count}}</a>
+		</div>
+		<div class="tab">
+			{{#if currentRepositoryDataTabIs 'Contributors'}}
+				{{#each contributorsList }}
+					<p>{{login}}</p>
+				{{/each}}
+			{{/if}}
+			{{#if currentRepositoryDataTabIs 'Watchers'}}
+				{{#each watchersList }}
+					<p>{{login}}</p>
+				{{/each}}
+			{{/if}}
+			{{#if currentRepositoryDataTabIs 'Forks'}}
+				{{#each forksList }}
+					<p>{{full_name}}</p>
+				{{/each}}
+			{{/if}}
+			{{#if currentRepositoryDataTabIs 'Stargazers'}}
+				{{#each stargazersList }}
+					<p>{{login}}</p>
+				{{/each}}
+			{{/if}}
+		</div>
 	</div>
 </template>

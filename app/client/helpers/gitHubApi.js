@@ -5,7 +5,7 @@ Apagado.GitHubApi = (function() {
 		check(repositoryFullName, String);
 		check(callback, Function);
 
-		HTTP.get('https://api.github.com/repos/'+ repositoryFullName +'/'+ type, {}, function(error, response) {
+		HTTP.get('https://api.github.com/repos/'+ repositoryFullName +'/'+ type, { params: { per_page : 100 }}, function(error, response) {
 			if(error) {
 				return;
 			}
@@ -18,7 +18,7 @@ Apagado.GitHubApi = (function() {
 		check(git_username, String);
 		check(callback, Function);
 
-		HTTP.get('https://api.github.com/users/'+ git_username +'/repos', {}, function(error, response) {
+		HTTP.get('https://api.github.com/users/'+ git_username +'/repos', { params: { per_page : 100 }}, function(error, response) {
 			if(error) {
 				return;
 			}
@@ -42,19 +42,6 @@ Apagado.GitHubApi = (function() {
 	api.getContributors = function(repositoryFullName, callback) {
 		getRepositoryDataByType(repositoryFullName, callback, 'contributors');
 	}
-
-	// api.getDataByUrl = function(url, callback) {
-	// 	check(url);
-	// 	check(callback, Function);
-
-	// 	HTTP.get(url, {}, function(error, response) {
-	// 		if(error) {
-	// 			return;
-	// 		}
-
-	// 		callback(error, response.data, git_username, repositoryName);
-	// 	});
-	// };
 
 	return api;
 }());
