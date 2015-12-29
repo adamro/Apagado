@@ -60,6 +60,19 @@ Template.repositoryItem.helpers({
 	    } else {
 	      return '';
 	    }
+  	}, 
+  	currentRepositoryDataTabCached: function() {
+  		var currentActiveTab = Template.instance().currentRepositoryDataTab.get();
+
+  		if(currentActiveTab == '') {
+  			return true;
+  		}
+
+		var repositoriesArray = Session.get('repositoryFullNameWith'+ Template.instance().currentRepositoryDataTab.get() +'Cached');
+		return _.contains(repositoriesArray, this.full_name);	
+  	}, 
+  	getLanguageInDevIconsFormat: function(language) { 
+  		return language.toLowerCase().replace('++', 'plusplus').replace('#', 'sharp');
   	}
 });
 

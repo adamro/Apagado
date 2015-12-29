@@ -1,11 +1,14 @@
 <template name="repositoriesList">
-	{{> search}}
 	<h1>{{git_username}}'s repository list</h1>
 	{{#if repositoriesCached }}
-		{{# each repositories}}
-			{{> repositoryItem}}
-		{{/each}}
+		{{#if hasRepositories }}
+			{{# each repositories}}
+				{{> repositoryItem}}
+			{{/each}}
+		{{else}}
+			<h3>User has no repositories</h3>
+		{{/if}}
 	{{else}}
-		<h3>not ready</h3>
+		{{> spinner}}
 	{{/if}}
 </template>

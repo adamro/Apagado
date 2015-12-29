@@ -22,5 +22,9 @@ Template.repositoriesList.helpers({
 	repositoriesCached: function() {
 		var usersArray = Session.get('usersWithRepositoriesCached');
 		return _.contains(usersArray, Iron.controller().state.get('git_username'));
+	},
+	hasRepositories: function() { 
+		var git_username = Iron.controller().state.get('git_username');
+		return Apagado.Cacher.Repositories.find({ 'owner.login': git_username }, { sort: { repo_score: -1 }}).count() != 0;
 	}
 });
