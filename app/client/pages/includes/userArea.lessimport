@@ -1,0 +1,9 @@
+.user-area { 
+	display: inline-flex;
+	.avatar { 
+		margin-right: 20px;
+	}
+	.octicon { 
+		margin-right: 10px;
+	}
+}

@@ -1,11 +1,16 @@
 <template name="userArea">
-				 <p>{{login}}</p>
-				 <p>{{followers}}</p>
-				 <p>{{following}}</p>
- 	{{#if email}}<p>{{email}}</p>{{/if}}
-				<p>{{created_at}}</p>
-	{{#if name}}<p>{{name}}</p>{{/if}}
-	{{#if company}}<p>{{company}}</p>{{/if}}
-	{{#if location}}<p>{{location}}</p>{{/if}}
-				<p>{{avatar_url}}</p>
+	<div class="user-area row">
+		<div>
+			<img class="avatar" height="230" width="230" src="{{avatar_url}}"/>
+		</div>
+		<div>
+			{{#if name}}<p>{{name}}</p>{{/if}}
+			{{#if email}}<p><span class="octicon octicon-mail"></span>{{email}}</p>{{/if}}
+			{{#if company}}<p><span class="octicon octicon-organization"></span>{{company}}</p>{{/if}}
+			{{#if location}}<p><span class="octicon octicon-location"></span>{{location}}</p>{{/if}}
+			<p><span class="octicon octicon-clock"></span>Joined {{moFromNow created_at}}</p>
+			<p><span class="octicon octicon-person"></span>Followers: {{followers}}</p>
+			<p><span class="octicon octicon-person"></span>Following: {{following}}</p>
+		</div>
+	</div>
 </template>

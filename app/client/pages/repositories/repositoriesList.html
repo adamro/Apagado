@@ -4,7 +4,7 @@
 		{{#if pageReady }}
 			{{> userArea user}}
 			{{#if hasRepositories }}
-				<h3>Repositories:</h3>
+				<h3 class="repositories-title">Repositories:</h3>
 				{{# each repositories}}
 					{{> repositoryItem}}
 				{{/each}}
