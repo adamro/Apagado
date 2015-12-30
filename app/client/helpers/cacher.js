@@ -1,10 +1,11 @@
 Apagado.Cacher = (function() {
 	var api = {};
 
-	const REPOSITORY_ATTRIBUTES = ['id', 'full_name', 'url', 'owner', 'name', 'description', 'created_at', 'updated_at', 'language', 'watchers', 'forks', 'stargazers_count', 'fork'];
+	const REPOSITORY_ATTRIBUTES = ['id', 'full_name', 'url', 'html_url', 'owner', 'name', 'description', 'created_at', 'updated_at', 'language', 'watchers', 'forks', 'stargazers_count', 'fork'];
 	const WATCHER_ATTRIBUTES = ['login', 'id', 'html_url'];
 	const STARGAZER_ATTRIBUTES = ['login', 'id', 'html_url'];
 	const CONTRIBUTOR_ATTRIBUTES = ['login', 'id', 'html_url'];
+
 	const REPOSITORY_DATA_TYPES = ['Watchers', 'Forks', 'Stargazers', 'Contributors'];
 
 	/* Caching Collections initializations */
@@ -120,7 +121,7 @@ Apagado.Cacher = (function() {
 				var relevantStargazer = _.pick(stargazer, STARGAZER_ATTRIBUTES);
 
 				// Used upsert instead of insert to avoid duplicates from caching Watchers / Contributors
-				api.Users.upsert({id: relevantStargazer.id}, { $setOnInsert: relevantStargazer, $addToSet: { stargazing: repositoryFullName } });
+				api.Users.upsert({id: relevantStargazer.id}, { $setOnInsert: relevantStargazer, $addToSet: { stargazering: repositoryFullName } });
 			});
 		}
 

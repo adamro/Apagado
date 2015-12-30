@@ -77,12 +77,37 @@ Template.repositoryItem.helpers({
   		}
 
   		return language.toLowerCase().replace('++', 'plusplus').replace('#', 'sharp');
+  	},
+  	tabDataError: function() { 
+  		return Session.get('tabDataError');
+  	},
+  	getContribution: function(contributor) { 
+  		var contributions = contributor.contributions;
+  		if(!contributions || !Array.isArray(contributions)) { 
+  			return;
+  		}
+
+	  	var thisContribution;
+
+	  	contributions.forEach(function(contribution) {
+
+	  		//	Use Template.instance() to grab data and not this because likely to be called from within a different data contex
+	  		if(contribution.includes(Template.instance().data.full_name)) {
+	  			var splittedContribution = contribution.split('?');
+	  			thisContribution = splittedContribution[1];
+	  			return;
+	  		}
+	  	});
+
+	  	return thisContribution;
   	}
 });
 
 Template.repositoryItem.events({
 	'click .repository-data-tab': function(event, template) {
 		event.preventDefault();
+
+		Session.set('tabDataError', '');
 
 		var dataTypeName = event.currentTarget.dataset.tabName;
 		if(!dataTypeName) { 

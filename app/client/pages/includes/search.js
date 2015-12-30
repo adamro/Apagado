@@ -23,7 +23,8 @@ Template.search.events({
 			Template.instance().searchError.set(NO_USERNAME_ERROR);
 			return;
 		}
-
+		
+		Template.instance().searchError.set('');
 		Router.go('repositoriesList', { git_username: git_username });
 	}
 });

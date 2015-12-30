@@ -1,0 +1,23 @@
+<template name="repositoriesList">
+	{{#unless repositoryError }}
+		<h1>{{git_username}}'s repository list</h1>
+		{{#if repositoriesCached }}
+			{{#if hasRepositories }}
+				{{# each repositories}}
+					{{> repositoryItem}}
+				{{/each}}
+			{{else}}
+				<div class="error">
+					<p>User has no repositories</p>
+				</div>
+			{{/if}}
+		{{else}}
+			{{> spinner}}
+		{{/if}}
+	{{else}}
+		<div class="error repository-error">
+			<p>{{repositoryError}}</p>
+		</div>
+	{{/unless}}
+
+</template>
