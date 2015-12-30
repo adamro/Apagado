@@ -74,12 +74,27 @@ Apagado.GitHubApi = (function() {
 		});
 	};
 
+	api.getUser = function(git_username, callback) { 
+		check(git_username, String);
+		check(callback, Function);
+
+		var urlToGet = 'https://api.github.com/users/' + git_username;
+			HTTP.get(urlToGet, {}, function(error, response) {
+			if(error) {
+				setRepositoryCachingError(error);
+				return;
+			}
+
+			callback(response.data);
+		});
+	}
+
 	api.getRepositories = function(git_username, callback) {
 		check(git_username, String);
 		check(callback, Function);
 
 		var urlToGet = 'https://api.github.com/users/'+ git_username +'/repos';
-		HTTP.get(urlToGet, { params: { per_page : 100 }}, function(error, response) {
+		HTTP.get(urlToGet, {}, function(error, response) {
 			if(error) {
 				setRepositoryCachingError(error);
 				return;
@@ -97,18 +112,30 @@ Apagado.GitHubApi = (function() {
 	};
 
 	api.getWatchers = function(repositoryFullName, callback) {
+		check(repositoryFullName, String);
+		check(callback, Function);
+
 		getRepositoryDataByType(repositoryFullName, callback, 'watchers');
 	}
 
 	api.getForks = function(repositoryFullName, callback) {
+		check(repositoryFullName, String);
+		check(callback, Function);
+
 		getRepositoryDataByType(repositoryFullName, callback, 'forks');
 	}
 
 	api.getStargazers = function(repositoryFullName, callback) {
+		check(repositoryFullName, String);
+		check(callback, Function);
+
 		getRepositoryDataByType(repositoryFullName, callback, 'stargazers');
 	}
 
 	api.getContributors = function(repositoryFullName, callback) {
+		check(repositoryFullName, String);
+		check(callback, Function);
+
 		getRepositoryDataByType(repositoryFullName, callback, 'contributors');
 	}
 

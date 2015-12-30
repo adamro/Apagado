@@ -2,9 +2,8 @@ Apagado.Cacher = (function() {
 	var api = {};
 
 	const REPOSITORY_ATTRIBUTES = ['id', 'full_name', 'url', 'html_url', 'owner', 'name', 'description', 'created_at', 'updated_at', 'language', 'watchers', 'forks', 'stargazers_count', 'fork'];
-	const WATCHER_ATTRIBUTES = ['login', 'id', 'html_url'];
-	const STARGAZER_ATTRIBUTES = ['login', 'id', 'html_url'];
-	const CONTRIBUTOR_ATTRIBUTES = ['login', 'id', 'html_url'];
+	const BASIC_USER_ATTRIBUTES = ['login', 'id', 'html_url'];
+	const USER_ATTRIBUTES = ['login', 'id', 'html_url', 'followers', 'following', 'email', 'created_at', 'name', 'company', 'location', 'avatar_url'];
 
 	const REPOSITORY_DATA_TYPES = ['Watchers', 'Forks', 'Stargazers', 'Contributors'];
 
@@ -20,6 +19,7 @@ Apagado.Cacher = (function() {
 	}
 
 	Session.set('usersWithRepositoriesCached', []);
+	Session.set('usersCached', []);
 	createSessionsForRepositoryDataTypes();
 
 	var insertStringToSessionWithArray = function(sessionName, string) { 
@@ -36,6 +36,10 @@ Apagado.Cacher = (function() {
 		insertStringToSessionWithArray('usersWithRepositoriesCached', git_username);
 	}
 
+	var setUserCached = function(git_username) { 
+		insertStringToSessionWithArray('usersCached', git_username);
+	}
+
 	var setRepositoryFullNameCachedByType = function(repositoryFullName, dataType) { 
 		insertStringToSessionWithArray('repositoryFullNameWith' + dataType + 'Cached', repositoryFullName);
 	}
@@ -48,6 +52,10 @@ Apagado.Cacher = (function() {
 	/* Is cached getters */
 	api.isUserRepositoriesCached = function(git_username) { 
 		return isStringInSessionArray('usersWithRepositoriesCached', git_username);
+	}
+
+	api.isUserCached = function(git_username) { 
+		return isStringInSessionArray('usersCached', git_username);
 	}
 
 	api.isFullNameRepositoryWatchersCached = function(repositoryFullName) { 
@@ -69,8 +77,9 @@ Apagado.Cacher = (function() {
 	/* Caching in collections methods */
 
 	api.cacheRepositories = function(repositories, git_username) {
-		if(Array.isArray(repositories)) { 
-			repositories.forEach(function(repository) { 
+		if(Array.isArray(repositories)) {
+			var first = true;
+			repositories.forEach(function(repository) {
 				var relevantRepository = _.pick(repository, REPOSITORY_ATTRIBUTES);
 
 				_.extend(relevantRepository, { repo_score:  relevantRepository.forks + 2 * relevantRepository.stargazers_count + relevantRepository.watchers });
@@ -82,6 +91,12 @@ Apagado.Cacher = (function() {
 
 		setUserRepositoriesCached(git_username);
 		return;
+	}
+
+	api.cacheUser = function(user) { 
+		var relevantUser = _.pick(user, USER_ATTRIBUTES);
+		api.Users.upsert({id: relevantUser.id }, relevantUser);
+		setUserCached(user.login);
 	}
 
 	api.cacheForks = function(forks, repositoryFullName) {
@@ -102,7 +117,7 @@ Apagado.Cacher = (function() {
 	api.cacheWatchers = function(watchers, repositoryFullName) {
 		if(Array.isArray(watchers)) { 
 			watchers.forEach(function(watcher) { 
-				var relevantWatcher = _.pick(watcher, WATCHER_ATTRIBUTES);
+				var relevantWatcher = _.pick(watcher, BASIC_USER_ATTRIBUTES);
 
 				// Used upsert instead of insert to avoid duplicates from caching Stargazers / Contributors
 				api.Users.upsert({id: relevantWatcher.id}, { $setOnInsert: relevantWatcher, $addToSet: { watching: repositoryFullName } });
@@ -113,12 +128,10 @@ Apagado.Cacher = (function() {
 		return;
 	}
 
-	
-
 	api.cacheStargazers = function(stargazers, repositoryFullName) {
 		if(Array.isArray(stargazers)) { 
 			stargazers.forEach(function(stargazer) { 
-				var relevantStargazer = _.pick(stargazer, STARGAZER_ATTRIBUTES);
+				var relevantStargazer = _.pick(stargazer, BASIC_USER_ATTRIBUTES);
 
 				// Used upsert instead of insert to avoid duplicates from caching Watchers / Contributors
 				api.Users.upsert({id: relevantStargazer.id}, { $setOnInsert: relevantStargazer, $addToSet: { stargazering: repositoryFullName } });
@@ -132,7 +145,7 @@ Apagado.Cacher = (function() {
 	api.cacheContributors = function(contributors, repositoryFullName) {
 		if(Array.isArray(contributors)) { 
 			contributors.forEach(function(contributor) { 
-				var relevantContributor = _.pick(contributor, CONTRIBUTOR_ATTRIBUTES);
+				var relevantContributor = _.pick(contributor, BASIC_USER_ATTRIBUTES);
 
 				// Using '?' to chain contributions to repository name based on GitHub naming conventions: 
 				// "**username** : min 4 character, max 30 characters, must match the regular expression [a-z0-9_].""

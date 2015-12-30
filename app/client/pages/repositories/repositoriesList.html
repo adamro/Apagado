@@ -1,8 +1,10 @@
 <template name="repositoriesList">
 	{{#unless repositoryError }}
-		<h1>{{git_username}}'s repository list</h1>
-		{{#if repositoriesCached }}
+		<h1 class="title">{{git_username}}</h1>
+		{{#if pageReady }}
+			{{> userArea user}}
 			{{#if hasRepositories }}
+				<h3>Repositories:</h3>
 				{{# each repositories}}
 					{{> repositoryItem}}
 				{{/each}}
@@ -19,5 +21,4 @@
 			<p>{{repositoryError}}</p>
 		</div>
 	{{/unless}}
-
 </template>
