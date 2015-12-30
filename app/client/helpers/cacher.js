@@ -1,22 +1,17 @@
 Apagado.Cacher = (function() {
 	var api = {};
 
-	const REPOSITORY_ATTRIBUTES = ['full_name', 'url', 'owner', 'name', 'description', 'created_at', 'updated_at', 'language', 'watchers', 'forks', 'stargazers_count', 'fork'];
+	const REPOSITORY_ATTRIBUTES = ['id', 'full_name', 'url', 'owner', 'name', 'description', 'created_at', 'updated_at', 'language', 'watchers', 'forks', 'stargazers_count', 'fork'];
 	const WATCHER_ATTRIBUTES = ['login', 'id', 'html_url'];
 	const STARGAZER_ATTRIBUTES = ['login', 'id', 'html_url'];
-	const CONTRIBUTOR_ATTRIBUTES = ['login', 'id', 'contributions', 'html_url'];
+	const CONTRIBUTOR_ATTRIBUTES = ['login', 'id', 'html_url'];
 	const REPOSITORY_DATA_TYPES = ['Watchers', 'Forks', 'Stargazers', 'Contributors'];
 
-	/* Collections caches initializations */
-
+	/* Caching Collections initializations */
 	api.Repositories = new Mongo.Collection(null);
-	api.Watchers = new Mongo.Collection(null);
-	api.Forks = new Mongo.Collection(null);
-	api.Stargazers = new Mongo.Collection(null);
-	api.Contributors = new Mongo.Collection(null);
+	api.Users = new Mongo.Collection(null);
 
 	/* Sessions cache mapping initialization */
-
 	var createSessionsForRepositoryDataTypes = function() { 
 		REPOSITORY_DATA_TYPES.forEach(function(dataType) { 
 			Session.set('repositoryFullNameWith' + dataType + 'Cached');
@@ -79,7 +74,8 @@ Apagado.Cacher = (function() {
 
 				_.extend(relevantRepository, { repo_score:  relevantRepository.forks + 2 * relevantRepository.stargazers_count + relevantRepository.watchers });
 
-				api.Repositories.insert(relevantRepository);
+				// Used upsert instead of insert to avoid duplicates from caching Forks
+				api.Repositories.upsert({id: relevantRepository.id }, { $setOnInsert: relevantRepository });
 			});
 		}
 
@@ -87,27 +83,14 @@ Apagado.Cacher = (function() {
 		return;
 	}
 
-	api.cacheWatchers = function(watchers, repositoryFullName) {
-		if(Array.isArray(watchers)) { 
-			watchers.forEach(function(watcher) { 
-				var relevantWatcher = _.pick(watcher, WATCHER_ATTRIBUTES);
-				_.extend(relevantWatcher, { watching: repositoryFullName });
-
-				api.Watchers.insert(relevantWatcher);
-			});
-		}
-
-		setRepositoryFullNameCachedByType(repositoryFullName, 'Watchers');
-		return;
-	}
-
 	api.cacheForks = function(forks, repositoryFullName) {
 		if(Array.isArray(forks)) { 
 			forks.forEach(function(fork) { 
 				var relevantFork = _.pick(fork, REPOSITORY_ATTRIBUTES);
-				_.extend(relevantFork, { fork_of: repositoryFullName });
+				_.extend(relevantFork, { repo_score:  relevantFork.forks + 2 * relevantFork.stargazers_count + relevantFork.watchers });
 
-				api.Forks.insert(relevantFork);
+				// Used upsert instead of insert to avoid duplicates from caching user's Repositories
+				api.Repositories.upsert({id: relevantFork.id }, { $setOnInsert: relevantFork, $addToSet: { fork_of: repositoryFullName }});
 			});
 		}
 
@@ -115,13 +98,29 @@ Apagado.Cacher = (function() {
 		return;
 	}
 
+	api.cacheWatchers = function(watchers, repositoryFullName) {
+		if(Array.isArray(watchers)) { 
+			watchers.forEach(function(watcher) { 
+				var relevantWatcher = _.pick(watcher, WATCHER_ATTRIBUTES);
+
+				// Used upsert instead of insert to avoid duplicates from caching Stargazers / Contributors
+				api.Users.upsert({id: relevantWatcher.id}, { $setOnInsert: relevantWatcher, $addToSet: { watching: repositoryFullName } });
+			});
+		}
+
+		setRepositoryFullNameCachedByType(repositoryFullName, 'Watchers');
+		return;
+	}
+
+	
+
 	api.cacheStargazers = function(stargazers, repositoryFullName) {
 		if(Array.isArray(stargazers)) { 
 			stargazers.forEach(function(stargazer) { 
 				var relevantStargazer = _.pick(stargazer, STARGAZER_ATTRIBUTES);
-				_.extend(relevantStargazer, { stargazering: repositoryFullName });
 
-				api.Stargazers.insert(relevantStargazer);
+				// Used upsert instead of insert to avoid duplicates from caching Watchers / Contributors
+				api.Users.upsert({id: relevantStargazer.id}, { $setOnInsert: relevantStargazer, $addToSet: { stargazing: repositoryFullName } });
 			});
 		}
 
@@ -133,9 +132,14 @@ Apagado.Cacher = (function() {
 		if(Array.isArray(contributors)) { 
 			contributors.forEach(function(contributor) { 
 				var relevantContributor = _.pick(contributor, CONTRIBUTOR_ATTRIBUTES);
-				_.extend(relevantContributor, { contributed_to: repositoryFullName });
 
-				api.Contributors.insert(relevantContributor);
+				// Using '?' to chain contributions to repository name based on GitHub naming conventions: 
+				// "**username** : min 4 character, max 30 characters, must match the regular expression [a-z0-9_].""
+				// "Repository names must match the regular expression [a-zA-Z0-9-_.]""
+				var contributionToThisRepository = repositoryFullName + '?' + contributor.contributions;
+			
+				// Used upsert instead of insert to avoid duplicates from caching Stargazers / Watchers
+				api.Users.upsert({id: relevantContributor.id}, { $setOnInsert: relevantContributor, $addToSet: { contributed_to: repositoryFullName, contributions: contributionToThisRepository } });
 			});
 		}
 

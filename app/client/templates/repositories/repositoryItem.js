@@ -39,17 +39,17 @@ Template.repositoryItem.helpers({
 	hasStargazers: function() { 
 		return this.stargazers_count != 0;
 	}, 
-	watchersList: function() { 
-		return Apagado.Cacher.Watchers.find({ watching: this.full_name });
-	}, 
 	forksList: function() { 
-		return Apagado.Cacher.Forks.find({ fork_of: this.full_name });
+		return Apagado.Cacher.Repositories.find({ fork_of: this.full_name });
 	},
+	watchersList: function() { 
+		return Apagado.Cacher.Users.find({ watching: this.full_name });
+	}, 
 	stargazersList: function() { 
-		return Apagado.Cacher.Stargazers.find({ stargazering: this.full_name });
+		return Apagado.Cacher.Users.find({ stargazering: this.full_name });
 	}, 
 	contributorsList: function() { 
-		return Apagado.Cacher.Contributors.find({ contributed_to: this.full_name });
+		return Apagado.Cacher.Users.find({ contributed_to: this.full_name });
 	},
 	currentRepositoryDataTabIs: function (tabName) {
     	return Template.instance().currentRepositoryDataTabIs(tabName);
@@ -71,7 +71,11 @@ Template.repositoryItem.helpers({
 		var repositoriesArray = Session.get('repositoryFullNameWith'+ Template.instance().currentRepositoryDataTab.get() +'Cached');
 		return _.contains(repositoriesArray, this.full_name);	
   	}, 
-  	getLanguageInDevIconsFormat: function(language) { 
+  	getLanguageInDevIconsFormat: function(language) {
+  		if(!language) { 
+  			return;
+  		}
+
   		return language.toLowerCase().replace('++', 'plusplus').replace('#', 'sharp');
   	}
 });
@@ -85,17 +89,22 @@ Template.repositoryItem.events({
 			return;
 		}
 
-		var dataTypeFunctions = template.dataTypeFunctionsMap[dataTypeName];
-		if(!dataTypeFunctions) { 
-			return
+		if(template.currentRepositoryDataTabIs(dataTypeName)) { 
+			template.currentRepositoryDataTab.set('');
+		} else {
+			var dataTypeFunctions = template.dataTypeFunctionsMap[dataTypeName];
+			if(!dataTypeFunctions) { 
+				return
+			}
+
+			var repositoryFullName = template.data.full_name;
+
+			if(!dataTypeFunctions.isCached(repositoryFullName)) {
+				dataTypeFunctions.getData(repositoryFullName, dataTypeFunctions.cache);
+			}
+
+			template.currentRepositoryDataTab.set(dataTypeName);
 		}
-
-		var repositoryFullName = template.data.full_name;
-
-		if(!dataTypeFunctions.isCached(repositoryFullName)) {
-			dataTypeFunctions.getData(repositoryFullName, dataTypeFunctions.cache);
-		}
-
-		template.currentRepositoryDataTab.set(dataTypeName);
+		
 	}
 });
