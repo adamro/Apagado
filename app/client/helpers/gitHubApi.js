@@ -89,6 +89,19 @@ Apagado.GitHubApi = (function() {
 		});
 	}
 
+	api.getExactUserName = function(ignoringCaseGitUserName, callback) { 
+		var urlToGet = 'https://api.github.com/users/' + ignoringCaseGitUserName;
+		var exactUserName;
+		HTTP.get(urlToGet, {}, function(error, response) {
+			if(error) {
+				setRepositoryCachingError(error);
+				return;
+			}
+
+			callback(response.data.login);
+		});
+	}
+
 	api.getRepositories = function(git_username, callback) {
 		check(git_username, String);
 		check(callback, Function);
