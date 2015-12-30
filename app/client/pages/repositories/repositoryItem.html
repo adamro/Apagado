@@ -4,18 +4,20 @@
 		<div class="title"><a href="{{html_url}}"><h3><span class="octicon octicon-repo{{#if fork }}-forked{{/if}}"></span>{{name}}</h3></a></div>
 		{{#if description}}<p><i>{{description}}</i></p>{{/if}}
 		<div class="dates">
-			<p class="small">Created at {{moFormat created_at 'Do [of] MMMM YYYY'}} ({{moFromNow created_at}})</p>
-			<p class="small">Updated at {{moFormat updated_at 'Do [of] MMMM YYYY'}} ({{moFromNow updated_at}}) </p>
+			<p class="small">Created at <span class="desktop">{{moFormat created_at 'Do [of] MMMM YYYY'}}</span>
+				({{moFromNow created_at}})</p>
+			<p class="small">Updated at <span class="desktop">{{moFormat updated_at 'Do [of] MMMM YYYY'}}</span>
+				({{moFromNow updated_at}}) </p>
 		</div>
-		<div class="repository-data-tabs">
-			<a href="#" class="repository-data-tab  {{ selectedIfCurrentRepositoryDataTabIs 'Contributors'}}" data-tab-name="Contributors">
+		<div class="repository-data-tabs row">
+			<a href="#" class="col-xs-6 col-md-3 repository-data-tab  {{ selectedIfCurrentRepositoryDataTabIs 'Contributors'}}" data-tab-name="Contributors">
 				<span class="octicon octicon-organization"></span> Contributors</a>
-			<a href="#" class="{{#if hasWatchers}} repository-data-tab {{ selectedIfCurrentRepositoryDataTabIs 'Watchers'}} {{/if}}" data-tab-name="Watchers">
-				<span class="octicon octicon-eye"></span> Watchers: {{watchers}}</a>
-			<a href="#" class="{{#if hasForks}} repository-data-tab {{ selectedIfCurrentRepositoryDataTabIs 'Forks'}}{{/if}}" data-tab-name="Forks">
-				<span class="octicon octicon-git-branch"></span> Forks: {{forks}}</a>
-			<a href="#" class="{{#if hasStargazers}} repository-data-tab {{ selectedIfCurrentRepositoryDataTabIs 'Stargazers'}} {{/if}}" data-tab-name="Stargazers">
-				<span class="octicon octicon-star"></span> Stargazers: {{stargazers_count}}</a>
+			<a href="#" class="col-xs-6 col-md-3 {{#if hasWatchers}} repository-data-tab {{ selectedIfCurrentRepositoryDataTabIs 'Watchers'}} {{/if}}" data-tab-name="Watchers">
+				<span class="octicon octicon-eye"></span> Watchers<span class="desktop">: {{watchers}}</span></a>
+			<a href="#" class="col-xs-6 col-md-3 {{#if hasForks}} repository-data-tab {{ selectedIfCurrentRepositoryDataTabIs 'Forks'}}{{/if}}" data-tab-name="Forks">
+				<span class="octicon octicon-git-branch"></span> Forks<span class="desktop">: {{forks}}</span></a>
+			<a href="#" class="col-xs-6 col-md-3 {{#if hasStargazers}} repository-data-tab {{ selectedIfCurrentRepositoryDataTabIs 'Stargazers'}} {{/if}}" data-tab-name="Stargazers">
+				<span class="octicon octicon-star"></span> Stargazers<span class="desktop">: {{stargazers_count}}</span></a>
 		</div>
 		<div class="tab">
 			{{# unless tabDataError}}
@@ -25,22 +27,23 @@
 							<ul class="row">
 								{{#if currentRepositoryDataTabIs 'Contributors'}}
 								{{#each contributorsList }}
-									<li class="col-xs-4"><a href="/{{login}}">{{login}} ({{getContribution this}} contributions)</a></li>
+									<li class="col-xs-12 col-md-4"><a href="/{{login}}">{{login}} 
+										({{getContribution this}} contributions)</a></li>
 								{{/each}}
 								{{/if}}
 								{{#if currentRepositoryDataTabIs 'Watchers'}}
 									{{#each watchersList }}
-										<li class="col-xs-4"><a href="/{{login}}">{{login}}</a></li>
+										<li class="col-xs-12 col-md-4"><a href="/{{login}}">{{login}}</a></li>
 									{{/each}}
 								{{/if}}
 								{{#if currentRepositoryDataTabIs 'Forks'}}
 									{{#each forksList }}
-										<li class="col-xs-4"><a href="/{{owner.login}}"> {{owner.login}}/</a><a href="{{html_url}}">{{name}}</a></li>
+										<li class="col-xs-12 col-md-4"><a href="/{{owner.login}}"> {{owner.login}}/</a><a href="{{html_url}}">{{name}}</a></li>
 									{{/each}}
 								{{/if}}
 								{{#if currentRepositoryDataTabIs 'Stargazers'}}
 									{{#each stargazersList }}
-										<li class="col-xs-4"><a href="/{{login}}">{{login}}</a></li>
+										<li class="col-xs-12 col-md-4"><a href="/{{login}}">{{login}}</a></li>
 									{{/each}}
 								{{/if}}
 							</ul>

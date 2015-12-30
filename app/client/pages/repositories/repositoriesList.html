@@ -1,4 +1,5 @@
 <template name="repositoriesList">
+	{{> search}}
 	{{#unless repositoryError }}
 		<h1 class="title">{{git_username}}</h1>
 		{{#if pageReady }}

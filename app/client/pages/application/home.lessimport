@@ -1,16 +1,11 @@
 .home {
-	position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     text-align: center;
     .form-inline { 
     	margin-bottom: 40px;
     	.btn-primary { 
 			.btn-primary-custom;
 		}
-    }
-	
+    }	
 	h1 { 
 		padding:30px;
 	}

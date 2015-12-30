@@ -1,14 +1,15 @@
 <template name="userArea">
 	<div class="user-area row">
-		<div>
-			<img class="avatar" height="230" width="230" src="{{avatar_url}}"/>
+		<div class="col-xs-4">
+			<img class="avatar img-responsive" height="100%" width="100%" src="{{avatar_url}}"/>
 		</div>
-		<div>
+		<div class="col-xs-8">
 			{{#if name}}<p>{{name}}</p>{{/if}}
+			{{#if bio}}<p><i>{{bio}}</i></p>{{/if}}
 			{{#if email}}<p><span class="octicon octicon-mail"></span>{{email}}</p>{{/if}}
 			{{#if company}}<p><span class="octicon octicon-organization"></span>{{company}}</p>{{/if}}
 			{{#if location}}<p><span class="octicon octicon-location"></span>{{location}}</p>{{/if}}
-			<p><span class="octicon octicon-clock"></span>Joined {{moFromNow created_at}}</p>
+			<p><span class="octicon octicon-clock"></span>Joined GitHub {{moFromNow created_at}}</p>
 			<p><span class="octicon octicon-person"></span>Followers: {{followers}}</p>
 			<p><span class="octicon octicon-person"></span>Following: {{following}}</p>
 		</div>

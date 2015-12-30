@@ -2,6 +2,7 @@
 @import "../pages/application/home.lessimport";
 @import "../pages/repositories/repositoryItem.lessimport";
 @import "../pages/includes/userArea.lessimport";
+@import "../pages/includes/header.lessimport";
 
 p {
 	font-size: 16px;
@@ -9,6 +10,21 @@ p {
 
 p.small {
 	font-size: 12px;
+}
+
+@media(max-width:767px) {
+    p {
+		font-size: 14px;
+	}
+
+	p.small {
+		font-size: 10px;
+	}
+
+	h1, h2, h3, h4, h5, h6 {
+		font-size: 16px;
+		font-weight: 600;
+	}
 }
 
 a,
@@ -21,13 +37,13 @@ a.active {
 }
 
 body { 
-
 	color: @brand-primary;
 }
 
 #main { 
 	font-family: "Work Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 	color: @brand-primary;
+	margin-top: 80px;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -44,66 +60,5 @@ h1, h2, h3, h4, h5, h6 {
 h1.title { 
 	text-align: center;
 }
-
-h3.repositories-title { 
-	margin-left: 10%;
-}
-
-.navbar-fixed-top {
-        padding: 5px 0;
-        -webkit-transition: padding 0.3s;
-        -moz-transition: padding 0.3s;
-        transition: padding 0.3s;
-	    .navbar-brand {
-	        font-size: 2em;
-	        -webkit-transition: all 0.3s;
-	        -moz-transition: all 0.3s;
-	        transition: all 0.3s;
-	    }
-}
-
-.navbar-default {
-	font-family: "Work Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-	background-color: @brand-success;
-	color: #fff;
-	a {
-		color: #fff;
-	}
-	.navbar-header { 
-		display: inline-flex;
-		.navbar-brand {
-			color: #fff;
-			font-weight: 700;
-			&:hover {
-				color: @base-grey;
-			}
-		}
-		.form-inline { 
-			margin-top: 10px;
-			.btn-primary { 
-				.btn-primary-custom;
-			}
-		}
-	}
-
-	.navbar-nav > li > a {
-		color: #fff;
-	}
-	.navbar-nav > li > a:hover {
-		color: @base-grey;
-	}
-
-	.navbar-right {
-		padding:10px;
-		#login-buttons {
-			.login-button {
-				font-family: "Work Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-				background: #fff ;
-				color: @brand-success;
-			}
-		}
-	}
-}
-
 
 

@@ -3,7 +3,7 @@ Apagado.Cacher = (function() {
 
 	const REPOSITORY_ATTRIBUTES = ['id', 'full_name', 'url', 'html_url', 'owner', 'name', 'description', 'created_at', 'updated_at', 'language', 'watchers', 'forks', 'stargazers_count', 'fork'];
 	const BASIC_USER_ATTRIBUTES = ['login', 'id', 'html_url'];
-	const USER_ATTRIBUTES = ['login', 'id', 'html_url', 'followers', 'following', 'email', 'created_at', 'name', 'company', 'location', 'avatar_url'];
+	const USER_ATTRIBUTES = ['login', 'id', 'html_url', 'followers', 'following', 'email', 'created_at', 'name', 'company', 'location', 'avatar_url', 'bio'];
 
 	const REPOSITORY_DATA_TYPES = ['Watchers', 'Forks', 'Stargazers', 'Contributors'];
 
